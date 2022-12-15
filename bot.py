@@ -66,3 +66,4 @@ def quad(message: telebot.types.Message):
 bot.polling(non_stop=True) 
 
 print(1+1)
+print(2+2)
