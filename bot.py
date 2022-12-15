@@ -9,7 +9,7 @@ state = {}
 def start(m: telebot.types.Message) -> telebot.types.Message:
     markup = telebot.types.InlineKeyboardMarkup()
     markup.row_width = 1
-    items = (telebot.types.InlineKeyboardButton("Калькулятор", callback_data="calculator"), \
+    items = (telebot.types.InlineKeyboardButton("Решение квадратных уравнений", callback_data="quad"), \
          telebot.types.InlineKeyboardButton("Решение тригонометрических уравнений", callback_data="trigonometry"), \
             telebot.types.InlineKeyboardButton("Решение интегральных уравнений", callback_data="integral"))
     markup.add(*items)
