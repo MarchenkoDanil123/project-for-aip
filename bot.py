@@ -64,3 +64,5 @@ def quad(message: telebot.types.Message):
     else:
         return bot.send_message(chat_id=message.chat.id, text="Неверно")
 bot.polling(non_stop=True)
+
+print(1+1)
