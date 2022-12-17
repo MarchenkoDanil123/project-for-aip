@@ -1,6 +1,7 @@
 import telebot
 from typing import List, Union
 
+
 bot = telebot.TeleBot("2007989606:AAFtUMvumZFDbUKMigNDrq9y1ZpkcrFUDlY")
 
 state = {}
@@ -19,7 +20,7 @@ def start(m: telebot.types.Message) -> telebot.types.Message:
 @bot.callback_query_handler(func=lambda query: True)
 def query_handler(call: telebot.types.CallbackQuery):
     state[call.from_user.id] = call.data
-    return bot.send_message(chat_id=call.message.chat.id, text=f"режим изменен на {call.data}")
+    return bot.send_message(chat_id=call.message.chat.id, text=f"режим изменен на {call.data}, введи коэффициенты через пробел")
 
 @bot.message_handler(func=lambda message: True)
 def quad(message: telebot.types.Message):
@@ -45,12 +46,12 @@ def quad(message: telebot.types.Message):
         x1: float = (-b - D ** 0.5) / (2 * a)
         x2: float = (-b + D ** 0.5) / (2 * a)
 
-        if str(x1).endswith('.0'):
+        if int(x1).endswith('.0'):
             x1 = int(x1)
-        if str(x2).endswith('.0'):
+        if int(x2).endswith('.0'):
             x2 = int(x2)    
-        return bot.send_message(chat_id=message.chat.id, text=f'*Корни:*\n\nПервый корень: *{int(x1)}*\nВторой корень: *{int(x2)}*', parse_mode='Markdown')
-    elif current_state == 'calculator':
+        return bot.send_message(chat_id=message.chat.id, text=f'*Корни:*\n\nПервый корень: *{str(x1)}*\nВторой корень: *{str(x2)}*', parse_mode='Markdown')
+    elif current_state == 'trigonometry':
         text = message.text
         text = text.replace(" ", "")
         mass = list(text)
