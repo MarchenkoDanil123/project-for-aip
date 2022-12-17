@@ -20,8 +20,12 @@ def start(m: telebot.types.Message) -> telebot.types.Message:
 @bot.callback_query_handler(func=lambda query: True)
 def query_handler(call: telebot.types.CallbackQuery):
     state[call.from_user.id] = call.data
-    return bot.send_message(chat_id=call.message.chat.id, text=f"режим изменен на {call.data}, введи коэффициенты через пробел")
-
+    if call.data == 'quad':
+        return bot.send_message(chat_id=call.message.chat.id, text=f"режим изменен на {call.data}, введи коэффициенты через пробел")
+    elif call.data == 'trigonometry':
+        return bot.send_message(chat_id=call.message.chat.id, text=f"режим изменен на {call.data}")
+    else:
+        return bot.send_message(chat_id=call.message.chat.id, text=f"режим изменен на {call.data}")
 @bot.message_handler(func=lambda message: True)
 def quad(message: telebot.types.Message):
     current_state = state.get(message.from_user.id, None)
@@ -46,11 +50,11 @@ def quad(message: telebot.types.Message):
         x1: float = (-b - D ** 0.5) / (2 * a)
         x2: float = (-b + D ** 0.5) / (2 * a)
 
-        if int(x1).endswith('.0'):
+        if str(x1).endswith('.0'):
             x1 = int(x1)
-        if int(x2).endswith('.0'):
+        if str(x2).endswith('.0'):
             x2 = int(x2)    
-        return bot.send_message(chat_id=message.chat.id, text=f'*Корни:*\n\nПервый корень: *{str(x1)}*\nВторой корень: *{str(x2)}*', parse_mode='Markdown')
+        return bot.send_message(chat_id=message.chat.id, text=f'*Корни:*\n\nПервый корень: *{str(x1)[:6]}*\nВторой корень: *{str(x2)[:6]}*', parse_mode='Markdown')
     elif current_state == 'trigonometry':
         text = message.text
         text = text.replace(" ", "")
