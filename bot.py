@@ -1,6 +1,7 @@
 import telebot
 from typing import List, Union
 
+
 bot = telebot.TeleBot("2007989606:AAFtUMvumZFDbUKMigNDrq9y1ZpkcrFUDlY")
 
 state = {}
@@ -19,8 +20,12 @@ def start(m: telebot.types.Message) -> telebot.types.Message:
 @bot.callback_query_handler(func=lambda query: True)
 def query_handler(call: telebot.types.CallbackQuery):
     state[call.from_user.id] = call.data
-    return bot.send_message(chat_id=call.message.chat.id, text=f"режим изменен на {call.data}")
-
+    if call.data == 'quad':
+        return bot.send_message(chat_id=call.message.chat.id, text=f"режим изменен на {call.data}, введи коэффициенты через пробел")
+    elif call.data == 'trigonometry':
+        return bot.send_message(chat_id=call.message.chat.id, text=f"режим изменен на {call.data}")
+    else:
+        return bot.send_message(chat_id=call.message.chat.id, text=f"режим изменен на {call.data}")
 @bot.message_handler(func=lambda message: True)
 def quad(message: telebot.types.Message):
     current_state = state.get(message.from_user.id, None)
@@ -37,7 +42,7 @@ def quad(message: telebot.types.Message):
         a, b, c = kf
         D = (b ** 2) - (4 * a * c)
         if D < 0:
-            return bot.send_message(chat_id=message.chat.id, text="нет корней")
+            return bot.send_message(chat_id=message.chat.id, text="нет вещественных корней")
         if D == 0:
             x = -b / 2 * a
             return bot.send_message(chat_id=message.chat.id, text=f"один корень: {int(x)}")
@@ -49,8 +54,8 @@ def quad(message: telebot.types.Message):
             x1 = int(x1)
         if str(x2).endswith('.0'):
             x2 = int(x2)    
-        return bot.send_message(chat_id=message.chat.id, text=f'*Корни:*\n\nПервый корень: *{int(x1)}*\nВторой корень: *{int(x2)}*', parse_mode='Markdown')
-    elif current_state == 'calculator':
+        return bot.send_message(chat_id=message.chat.id, text=f'Дискриминант = *{D}*\n\n *Корни:*\nПервый корень = *{str(x1)[:6]}*\nВторой корень = *{str(x2)[:6]}*', parse_mode='Markdown')
+    elif current_state == 'trigonometry':
         text = message.text
         text = text.replace(" ", "")
         mass = list(text)
@@ -66,5 +71,3 @@ def quad(message: telebot.types.Message):
     else:
         return bot.send_message(chat_id=message.chat.id, text="Неверно")
 bot.polling(non_stop=True)
-
-print("0"+"1")
