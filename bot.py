@@ -7,10 +7,20 @@ bot = telebot.TeleBot("2007989606:AAFtUMvumZFDbUKMigNDrq9y1ZpkcrFUDlY")
 
 state = {}
 def round_complex(x):
+    """
+    Функция окргуляет вещественную и мнимую часть комплексного числа до двух знаков после запятой и убирает скобки вокруг числа
+    :param x: комплексное число 
+    :return: округленное комплексное число без скобок
+    """
     return "{:.2f}{:+.2f}j".format(x.real, x.imag)
 
 @bot.message_handler(commands=["start"])
 def start(m: telebot.types.Message) -> telebot.types.Message:
+    """
+    Функция командует созданием 3 кнопок выбора режима и сообщением от бота
+    :param m: 
+    :return: 3 кнопки с различными режимами калькулятора и просит выбрать один из них
+    """
     markup = telebot.types.InlineKeyboardMarkup()
     markup.row_width = 1
     items = (telebot.types.InlineKeyboardButton("Решение квадратных уравнений", callback_data="quad"), \
@@ -22,6 +32,11 @@ def start(m: telebot.types.Message) -> telebot.types.Message:
 
 @bot.callback_query_handler(func=lambda query: True)
 def query_handler(call: telebot.types.CallbackQuery):
+    """
+    Функция проверяет выбранный пользователем режим и выводит соответствующие ему сообщение
+    :param call: запрос полученный от пользователя
+    :return: сообщение пользователю
+    """
     state[call.from_user.id] = call.data
     if call.data == 'quad':
         return bot.send_message(chat_id=call.message.chat.id, text=f"режим изменен на {call.data}, введите коэффициенты через пробел")
@@ -31,6 +46,11 @@ def query_handler(call: telebot.types.CallbackQuery):
         return bot.send_message(chat_id=call.message.chat.id, text=f"режим изменен на {call.data}, введите функцию, которая будет интегрирована, а также нижний и верхний пределы через пробелы")
 @bot.message_handler(func=lambda message: True)
 def calculator(message: telebot.types.Message):
+    """
+    Вычисляет решение для заданного уравнения на основе текущего состояния и пользовательского ввода.
+    :param message: Объект сообщения, полученный от пользователя.
+    :return: Cообщение, отправленное пользователю с решением уравнения.
+    """
     current_state = state.get(message.from_user.id, None)
     if current_state == 'quad':
         text = message.text
