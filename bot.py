@@ -1,10 +1,12 @@
 import telebot
 from typing import List, Union
-
+import cmath
 
 bot = telebot.TeleBot("2007989606:AAFtUMvumZFDbUKMigNDrq9y1ZpkcrFUDlY")
 
 state = {}
+def round_complex(x):
+    return "{:.2f}{:+.2f}j".format(x.real, x.imag)
 
 @bot.message_handler(commands=["start"])
 def start(m: telebot.types.Message) -> telebot.types.Message:
@@ -40,9 +42,14 @@ def quad(message: telebot.types.Message):
             return bot.send_message(chat_id=message.chat.id, text="введи числа")
 
         a, b, c = kf
-        D = (b ** 2) - (4 * a * c)
+        D = int(b ** 2) - (4 * a * c)
+
+    
         if D < 0:
-            return bot.send_message(chat_id=message.chat.id, text="нет вещественных корней")
+            x1 = round_complex((-b + cmath.sqrt(D)) / (2*a))
+            x2 = round_complex((-b - cmath.sqrt(D)) / (2*a))    
+            return bot.send_message(chat_id=message.chat.id, text=f"Нет вещественных корней, но есть комплексные:\n\n Первый корень = {x1}\n Второй корень = {x2}")
+
         if D == 0:
             x = -b / 2 * a
             return bot.send_message(chat_id=message.chat.id, text=f"один корень: {int(x)}")
@@ -54,7 +61,7 @@ def quad(message: telebot.types.Message):
             x1 = int(x1)
         if str(x2).endswith('.0'):
             x2 = int(x2)    
-        return bot.send_message(chat_id=message.chat.id, text=f'Дискриминант = *{D}*\n\n *Корни:*\nПервый корень = *{str(x1)[:6]}*\nВторой корень = *{str(x2)[:6]}*', parse_mode='Markdown')
+        return bot.send_message(chat_id=message.chat.id, text=f'Дискриминант = *{D}*\n\n *Корни:*\nПервый корень = {format(x1,".3f")}\nВторой корень = {format(x2, ".3f")}', parse_mode='Markdown')
     elif current_state == 'trigonometry':
         text = message.text
         text = text.replace(" ", "")
