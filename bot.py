@@ -40,6 +40,8 @@ def quad(message: telebot.types.Message):
             kf = list(map(float, kf))
         except Exception:
             return bot.send_message(chat_id=message.chat.id, text="введи числа")
+        if kf[0] == 0 or kf[1] == 0 or kf[2] == 0:
+            return bot.send_message(chat_id=message.chat.id, text="коэффицент не должен быть равен нулю")
 
         a, b, c = kf
         D = int(b ** 2) - (4 * a * c)
