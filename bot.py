@@ -1,6 +1,7 @@
 import telebot
 from typing import List, Union
 import cmath
+import sympy
 
 bot = telebot.TeleBot("2007989606:AAFtUMvumZFDbUKMigNDrq9y1ZpkcrFUDlY")
 
@@ -23,13 +24,13 @@ def start(m: telebot.types.Message) -> telebot.types.Message:
 def query_handler(call: telebot.types.CallbackQuery):
     state[call.from_user.id] = call.data
     if call.data == 'quad':
-        return bot.send_message(chat_id=call.message.chat.id, text=f"режим изменен на {call.data}, введи коэффициенты через пробел")
+        return bot.send_message(chat_id=call.message.chat.id, text=f"режим изменен на {call.data}, введите коэффициенты через пробел")
     elif call.data == 'trigonometry':
         return bot.send_message(chat_id=call.message.chat.id, text=f"режим изменен на {call.data}")
     else:
-        return bot.send_message(chat_id=call.message.chat.id, text=f"режим изменен на {call.data}")
+        return bot.send_message(chat_id=call.message.chat.id, text=f"режим изменен на {call.data}, введите функцию, которая будет интегрирована, а также нижний и верхний пределы через пробелы")
 @bot.message_handler(func=lambda message: True)
-def quad(message: telebot.types.Message):
+def calculator(message: telebot.types.Message):
     current_state = state.get(message.from_user.id, None)
     if current_state == 'quad':
         text = message.text
@@ -76,7 +77,39 @@ def quad(message: telebot.types.Message):
             else:
                 result.append (int(k))
         return bot.send_message(chat_id=message.chat.id, text=f" {result}")       
+    
+    elif current_state == 'integral':
+        try:
+            text = message.text
+            parts = text.split()
+            if len(parts) != 3:
+                raise ValueError("Неверный ввод. Введите через пробел функцию, нижний и верхний пределы")
+            function = parts[0]
+            lower_limit = parts[1]
+            upper_limit = parts[2]
+
+            x = sympy.Symbol('x')
+            function = sympy.sympify(function)
+            lower_limit = sympy.sympify(lower_limit)
+            upper_limit = sympy.sympify(upper_limit)
+
+            result = sympy.integrate(function, (x, lower_limit, upper_limit))
+
+            bot.send_message(message.chat.id, result)
+    
+        except ValueError:
+            bot.send_message(message.chat.id, "Ошибка ввода. Пожалуйста, введите действительные математическое выражение и пределы")
+        # except sympy.SympifyError:
+        #     bot.send_message(message.chat.id, "Invalid function. Please enter a valid mathematical expression.")
+        
+
 
     else:
         return bot.send_message(chat_id=message.chat.id, text="Неверно")
+
+
+
 bot.polling(non_stop=True)
+    
+
+
