@@ -42,11 +42,11 @@ def query_handler(call: telebot.types.CallbackQuery):
     if call.data == 'quad':
         return bot.send_message(chat_id=call.message.chat.id, text=f"режим изменен на {call.data}, введите коэффициенты через пробел")
     elif call.data == 'trigonometry':
-        return bot.send_message(chat_id=call.message.chat.id, text=f"режим изменен на {call.data}, \
-             введите угол и тригонометрическую фукнцию через запятую и пробел")
+        return bot.send_message(chat_id=call.message.chat.id, \
+             text=f"режим изменен на {call.data}, введите угол и тригонометрическую фукнцию через запятую и пробел")
     else:
-        return bot.send_message(chat_id=call.message.chat.id, text=f"режим изменен на {call.data}, \
-            введите функцию, которая будет интегрирована, а также нижний и верхний пределы через пробелы")
+        return bot.send_message(chat_id=call.message.chat.id, \
+             text=f"режим изменен на {call.data}, введите функцию, которая будет интегрирована, а также нижний и верхний пределы через пробелы")
 
 @bot.message_handler(func=lambda message: True)
 def calculator(message: telebot.types.Message):
@@ -60,11 +60,11 @@ def calculator(message: telebot.types.Message):
         text = message.text
         kf = text.split()
         if len(kf) != 3:
-            return bot.send_message(chat_id=message.chat.id, text="введи 3 числа")
+            return bot.send_message(chat_id=message.chat.id, text="введите 3 числа")
         try:
             kf = list(map(float, kf))
         except Exception:
-            return bot.send_message(chat_id=message.chat.id, text="введи числа")
+            return bot.send_message(chat_id=message.chat.id, text="введите числа")
         if kf[0] == 0 or kf[1] == 0 or kf[2] == 0:
             return bot.send_message(chat_id=message.chat.id, text="коэффицент не должен быть равен нулю")
 
@@ -92,6 +92,8 @@ def calculator(message: telebot.types.Message):
         return bot.send_message(chat_id=message.chat.id, text=f'Дискриминант = *{D}*\n\n *Корни:*\nПервый корень = {format(x1,".3f")}\nВторой корень = {format(x2, ".3f")}', parse_mode='Markdown')
     elif current_state == 'trigonometry':
         text = message.text.split(", ")
+        if len(text) != 2:
+            return bot.send_message(chat_id=message.chat.id, text=f'введите "угол, функция"')
         angle_in_degrees = float(text[0])
         trig_function = text[1]
 
@@ -110,7 +112,7 @@ def calculator(message: telebot.types.Message):
         else:
            return bot.send_message(chat_id=message.chat.id, text="Неверный ввод функции")
             
-        return bot.send_message(chat_id=message.chat.id, text=f" {format(result, '.1f')}")   
+        return bot.send_message(chat_id=message.chat.id, text=f"{trig_function}(x) = {format(result, '.1f')}")   
     
     elif current_state == 'integral':
         try:
