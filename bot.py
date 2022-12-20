@@ -73,8 +73,7 @@ def calculator(message: telebot.types.Message):
         if D < 0:
             x1 = round_complex((-b + cmath.sqrt(D)) / (2*a))
             x2 = round_complex((-b - cmath.sqrt(D)) / (2*a))    
-            return bot.send_message(chat_id=message.chat.id, text=f"Нет вещественных корней, но есть комплексные:\n\n \
-                Первый корень = {x1}\n Второй корень = {x2}")
+            return bot.send_message(chat_id=message.chat.id, text=f"Нет вещественных корней, но есть комплексные:\n\nПервый корень = {x1}\n Второй корень = {x2}")
 
         if D == 0:
             x = -b / 2 * a
