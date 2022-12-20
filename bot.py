@@ -3,6 +3,7 @@ from typing import List, Union
 import cmath
 import sympy
 import math
+import numpy as np
 
 bot = telebot.TeleBot("2007989606:AAFtUMvumZFDbUKMigNDrq9y1ZpkcrFUDlY")
 
@@ -24,15 +25,18 @@ def start(m: telebot.types.Message) -> telebot.types.Message:
     """
     markup = telebot.types.InlineKeyboardMarkup()
     markup.row_width = 1
-    items = (telebot.types.InlineKeyboardButton("Решение квадратных уравнений", callback_data="quad"), \
-            telebot.types.InlineKeyboardButton("Решение тригонометрических уравнений", callback_data="trigonometry"), \
-            telebot.types.InlineKeyboardButton("Решение интегральных уравнений", callback_data="integral"))
+    items = (
+            telebot.types.InlineKeyboardButton("Решение квадратных уравнений", callback_data="quad"), 
+            telebot.types.InlineKeyboardButton("Решение тригонометрических уравнений", callback_data="trigonometry"), 
+            telebot.types.InlineKeyboardButton("Решение интегральных уравнений", callback_data="integral"), 
+            )
+
     markup.add(*items)
     return bot.send_message(chat_id=m.chat.id, text="Выбери режим", reply_markup=markup)
 
 
 @bot.callback_query_handler(func=lambda query: True)
-def query_handler(call: telebot.types.CallbackQuery):
+def query_handler(call: telebot.types.CallbackQuery) -> telebot.types.Message:
     """
     Функция проверяет выбранный пользователем режим и выводит соответствующие ему сообщение
     :param call: запрос полученный от пользователя
@@ -46,6 +50,7 @@ def query_handler(call: telebot.types.CallbackQuery):
     else:
         return bot.send_message(chat_id=call.message.chat.id, text=f"режим изменен на {call.data}, \
             введите функцию, которая будет интегрирована, а также нижний и верхний пределы через пробелы")
+
 
 @bot.message_handler(func=lambda message: True)
 def calculator(message: telebot.types.Message):
@@ -91,9 +96,6 @@ def calculator(message: telebot.types.Message):
         text = message.text.split(", ")
         angle_in_degrees = float(text[0])
         trig_function = text[1]
-
-        # def trig_calculator(angle_in_degrees, trig_function):
-        #     # Convert the angle to radians
         angle_in_radians = math.radians(angle_in_degrees)
             
         if trig_function == "sin":
@@ -110,6 +112,7 @@ def calculator(message: telebot.types.Message):
         return bot.send_message(chat_id=message.chat.id, text=f" {format(result, '.1f')}")   
     
     elif current_state == 'integral':
+        
         try:
             text = message.text
             parts = text.split()
@@ -127,13 +130,12 @@ def calculator(message: telebot.types.Message):
             result = sympy.integrate(function, (x, lower_limit, upper_limit))
 
             bot.send_message(message.chat.id, result)
-    
+
         except ValueError:
             bot.send_message(message.chat.id, "Ошибка ввода. Пожалуйста, введите действительные математическое выражение и пределы")
-
     else:
         return bot.send_message(chat_id=message.chat.id, text="Неверно")
 
 bot.polling(non_stop=True)
-    
+
 
