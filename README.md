@@ -1,7 +1,7 @@
 # project-for-aip
 telegram bot
 
-используется сторонние библиотеки:
+Программа использует сторонние библиотеки:
     sympy
     telegram bot 
 
