@@ -1,5 +1,4 @@
 import telebot
-from telebot import types
 from typing import List, Union
 import cmath
 import sympy
