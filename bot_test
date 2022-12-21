@@ -1,0 +1,90 @@
+# import math
+from bot import calculator
+import unittest
+import cmath
+from typing import List
+import telebot
+
+# def round_complex(num: complex) -> complex:
+#     return complex(round(num.real, 3), round(num.imag, 3))
+
+# def calculator(message: telebot.types.Message):
+#     # implementation of the calculator function
+
+class TestCalculator(unittest.TestCase):
+    def test_calculator(self):
+        # Test with real roots
+        message = telebot.types.Message(text='1 2 -3')
+        result = calculator(message)
+        self.assertEqual(result.text, 'Дискриминант = *16*\n\n *Корни:*\nПервый корень = -3.000\nВторой корень = 1.000')
+
+        # Test with complex roots
+        def test_complex(self):
+          message = telebot.types.Message(text='1 2 3')
+          result = calculator(message)
+          self.assertEqual(result.text, 'Нет вещественных корней, но есть комплексные:\n\n Первый корень = -1+1.41j\n Второй корень = -1-1.41j')
+
+        # Test with one root
+        message = telebot.types.Message(text='1 -2 1')
+        result = calculator(message)
+        self.assertEqual(result.text, 'один корень: 1')
+
+        # Test with invalid input
+        message = telebot.types.Message(text='1 2')
+        result = calculator(message)
+        self.assertEqual(result.text, 'введи 3 числа')
+
+        message = telebot.types.Message(text='1 a 3')
+        result = calculator(message)
+        self.assertEqual(result.text, 'введи числа')
+
+        message = telebot.types.Message(text='0 2 3')
+        result = calculator(message)
+        self.assertEqual(result.text, 'коэффицент не должен быть равен нулю')
+
+if __name__ == '__main__':
+    unittest.main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# def test_trig_calculator():
+#   # Test sine function
+#   assert math.isclose(trig_calculator(0, "sine"), 0, rel_tol=1e-9, abs_tol=1e-9)
+#   assert math.isclose(trig_calculator(30, "sine"), 0.5, rel_tol=1e-9, abs_tol=1e-9)
+#   assert math.isclose(trig_calculator(45, "sine"), 0.7071067811865475, rel_tol=1e-9, abs_tol=1e-9)
+#   assert math.isclose(trig_calculator(60, "sine"), 0.8660254037844386, rel_tol=1e-9, abs_tol=1e-9)
+#   assert math.isclose(trig_calculator(90, "sine"), 1, rel_tol=1e-9, abs_tol=1e-9)
+  
+#   # Test cosine function
+#   assert math.isclose(trig_calculator(0, "cosine"), 1, rel_tol=1e-9, abs_tol=1e-9)
+#   assert math.isclose(trig_calculator(30, "cosine"), 0.8660254037844386, rel_tol=1e-9, abs_tol=1e-9)
+#   assert math.isclose(trig_calculator(45, "cosine"), 0.7071067811865475, rel_tol=1e-9, abs_tol=1e-9)
+#   assert math.isclose(trig_calculator(60, "cosine"), 0.5, rel_tol=1e-9, abs_tol=1e-9)
+#   assert math.isclose(trig_calculator(90, "cosine"), 0, rel_tol=1e-9, abs_tol=1e-9)
+  
+#   # Test tangent function
+#   assert math.isclose(trig_calculator(0, "tangent"), 0, rel_tol=1e-9, abs_tol=1e-9)
+#   assert math.isclose(trig_calculator(30, "tangent"), 0.5773502691896257, rel_tol=1e-9, abs_tol=1e-9)
+#   assert math.isclose(trig_calculator(45, "tangent"), 1, rel_tol=1e-9, abs_tol=1e-9)
+#   assert math.isclose(trig_calculator(60, "tangent"), 1.7320508075688774, rel_tol=1e-9, abs_tol=1e-9)
+#   assert math.isclose(trig_calculator(90, "tangent"), math.inf, rel_tol=1e-9, abs_tol=1e-9)
+  
+
